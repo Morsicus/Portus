@@ -48,6 +48,20 @@ class NamespacesController < ApplicationController
     end
   end
 
+  # POST /namespace/1
+  # POST /namespace/1.json
+  def delete
+    @namespace = fetch_namespace
+    authorize @namespace
+
+    if @namespace.destroy
+      @namespaces = policy_scope(Namespace)
+      format.js { respond_with @namespace }
+    else
+      format.js { respond_with @namespace.errors, status: :unprocessable_entity }
+    end
+  end
+
   # PATCH/PUT /namespace/1
   # PATCH/PUT /namespace/1.json
   def update
